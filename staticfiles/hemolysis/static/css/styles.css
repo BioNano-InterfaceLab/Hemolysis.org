@@ -1,0 +1,24 @@
+section {
+    padding-top: 3rem;
+}
+
+section:last-of-type {
+    padding-bottom: 4rem;
+}
+
+.strong {
+    font-weight: bold;
+}
+
+div .album {
+    padding: 1rem 1rem;
+}
+
+.inline-citation {
+    font-weight: bold;
+    font-size: 0.6rem;
+}
+
+.btnViz {
+    padding: 0 0.3rem;
+}

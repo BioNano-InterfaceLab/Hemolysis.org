@@ -1,0 +1,82 @@
+server_tokens               off;
+access_log                  /var/log/nginx/hemolysisStaging.access.log;
+error_log                   /var/log/nginx/hemolysisStaging.error.log;
+
+# Redirect HTTP to HTTPS
+server {
+	server_name				*.hemolysis.org hemolysis.org;
+  listen                    80 default_server;
+  return                    301 https://$host$request_uri;
+}
+
+# Redirect www to non-www page (both HTTP and HTTPS)
+server {
+    server_name www.hemolysis.org;
+    return 301 $scheme://hemolysis.org$request_uri;
+}
+
+# HTTPS configuration
+server {
+	location /static/ {
+		autoindex on;
+	  	root /home/ubuntu/staticfiles/hemolysis/;
+	}
+
+	location /static/img/ {
+		alias /home/ubuntu/staticfiles/hemolysis/static/img/;
+		autoindex off;
+	}
+
+	location /static/css/ {
+		alias /home/ubuntu/staticfiles/hemolysis/static/css/;
+	}
+
+	location /static/users/ {
+		# TODO: there should be a better way of handling this
+		alias /home/ubuntu/staging/LehighU-RBC-Server/app/sim/users/;
+	}
+
+	location / {
+    	proxy_pass              http://127.0.0.1:8024; # Change this to 8024 after testing
+    	proxy_set_header        Host $host;
+		# proxy_redirect	off;
+		proxy_set_header    X-Forwarded-Proto $scheme;
+		#try_files $uri $uri/ =404;
+  	}
+
+	server_name	.hemolysis.org www.hemolysis.org;
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/hemolysis.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/hemolysis.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+
+}
+
+#server {
+#	server_name 		test.1hemolysis.org;
+#	listen	80;
+
+#	location /static/img/ {
+#		alias /home/ubuntu/staticfiles/hemolysis/static/img/;
+#		autoindex off;
+#	}
+
+#	location /static/css/ {
+#		alias /home/ubuntu/staticfiles/hemolysis/static/css/;
+#	}
+
+#	location /static/users/ {
+#		# TODO: there should be a better way of handling this
+#		alias /home/ubuntu/dev/DEV-LehighU-RBC-Server/app/sim/users/;
+#	}
+
+#	location / {
+#		proxy_pass	http://localhost:8066;
+#		proxy_set_header Host $host;
+#		proxy_redirect off;
+#	}
+
+#}

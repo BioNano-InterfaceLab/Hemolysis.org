@@ -1,0 +1,39 @@
+/* For text paragraphs */
+p {
+    text-indent: 2rem;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.no-indent {
+    text-indent: 0rem;
+}
+
+.reference-text {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.reference-text p {
+    padding-top: 0.5rem;
+    text-indent: 0rem;
+    line-height: 1.2rem;
+}
+
+
+/* For images display */
+.row {
+    display: flex;
+    padding: 1rem 0;
+}
+
+.column {
+    width: 50%;
+    padding: 1rem;
+}
+
+.column img{
+    width: 100%;
+}
